@@ -28,7 +28,10 @@ public class BaseActor extends Group {
 	private String path;
 	
 	private Texture texture;
-	
+	/**
+	 * Creates a base actor with the texture at the given path
+	 * @param path the path to the texture
+	 */
 	public BaseActor(String path) {
 		super();
 		region = new TextureRegion();
@@ -43,6 +46,10 @@ public class BaseActor extends Group {
 		this.setRectangleBoundary();
 		
 	}
+	/**
+	 * Creates a base actor with the texture given
+	 * @param t the texture
+	 */
 
 	public BaseActor(Texture t) {
 		super();
@@ -58,6 +65,10 @@ public class BaseActor extends Group {
 
 
 	}
+	/**
+	 * creates a base actor with no texture
+	 * (set texture before rendering)
+	 */
 	
 	public BaseActor() {
 		super();
@@ -68,6 +79,12 @@ public class BaseActor extends Group {
 		this.center = new Vector2();
 		this.setRectangleBoundary();
 	}
+	
+	/**
+	 * Sets the base actor's texture to the given texture
+	 * Also update's its size parameters
+	 * @param t the texture
+	 */
 
 	public void setTexture(Texture t) {
 		texture = t;
@@ -81,6 +98,12 @@ public class BaseActor extends Group {
 		
 
 	}
+	
+	/**
+	 * Sets the BaseActor's texture to the texture at the given path
+	 *
+	 * @param path to the texture
+	 */
 
 	public void genTexture(String path) {
 		try {
@@ -106,27 +129,43 @@ public class BaseActor extends Group {
 		Animation anim = new Animation(0.1f, framesArray, Animation.PlayMode.LOOP_PINGPONG);
 		// Texture baseTex = anim.getKeyFrame(0);
 	}
-
+	/**
+	 * Gets the BaseActor's bounding rectangle
+	 * @return Rectangle bouding rectangle
+	 */
+	
 	public Rectangle getBoundingRectangle() {
 		boundary.set(getX(), getY(), getWidth(), getHeight());
 		return boundary;
 
 	}
+	
 
-	public void setRectangleBoundary() {
+	private void setRectangleBoundary() {
 		float w = getWidth();
 		float h = getHeight();
 		float[] vertices = { 0, 0, w, 0, w, h, 0, h };
 		boundingPolygon = new Polygon(vertices);
 		boundingPolygon.setOrigin(getOriginX(), getOriginY());
 	}
-
+	/**
+	 * Gets the BaseActor's bounding polygon
+	 * equivilent to getBoundingRectangle() currently
+	 * @return
+	 */
 	public Polygon getBoundingPolygon() {
 		boundingPolygon.setPosition(getX(), getY());
 		boundingPolygon.getRotation();
 		return boundingPolygon;
 	}
-
+	
+	
+	/**
+	 * Checks to see if the BaseActor is overlapping another BaseActor	
+	 * @param other the other BaseActor
+	 * @param resolve True to move the baseActors out of each other if they are overlapping
+	 * @return Boolean weather or not they are overlapping
+	 */
 	public boolean overlaps(BaseActor other, boolean resolve) {
 		Polygon poly1 = this.getBoundingPolygon();
 		Polygon poly2 = other.getBoundingPolygon();
@@ -144,7 +183,10 @@ public class BaseActor extends Group {
 		return (polyOverlap && (mtv.depth > significant));
 
 	}
-
+	
+	/**
+	 * Function that acts as an update loop
+	 */
 	public void act(float dt) {
 		super.act(dt);
 		moveBy(vel.x * dt, vel.y * dt);
@@ -153,6 +195,9 @@ public class BaseActor extends Group {
 		center.y = this.getY() + this.getHeight() / 2;
 
 	}
+	/**
+	 * draws the BaseActor
+	 */
 
 	public void draw(Batch batch, float parentAlpha) {
 		// region.setRegion(anim.getKeyFrame(elapsedTime));
@@ -166,6 +211,10 @@ public class BaseActor extends Group {
 		super.draw(batch, parentAlpha);
 	}
 
+	/**
+	 * Sets this BaseActor to copy the given BaseActor
+	 * @param orig the BaseActor to copy
+	 */
 	public void copy(BaseActor orig) {
 		this.region = new TextureRegion(orig.region);
 		if (orig.boundingPolygon != null) {
@@ -182,13 +231,24 @@ public class BaseActor extends Group {
 		this.setVisible(orig.isVisible());
 
 	}
-
+	
+	
+	/**
+	 * Returns a copy of this BaseActor
+	 */
 	public BaseActor clone() {
 		BaseActor newbie = new BaseActor(this.path);
 		newbie.copy(this);
 		return newbie;
 	}
-
+	/**
+	 * Tells the BaseActor to point at the given point
+	 * @param x the x coord of the point to point at
+	 * @param y the y coord of the point to point at
+	 * @param speed the speed at which the BaseActor should rotate
+	 * @param rotate whether or not the BaseActor's image should be rotated to point at the given point
+	 * @return the angle between the BaseActor and the given point
+	 */
 	public double pointAt(double x, double y, float speed, boolean rotate) {
 
 		double yDiff = y - this.center.y;
@@ -205,7 +265,12 @@ public class BaseActor extends Group {
 	}
 	
 
-
+	/**
+	 * Calculates the distance between the center of this BaseActor and the given coords
+	 * @param x the x coord
+	 * @param y the y coord
+	 * @return Double the distance
+	 */
 	public double distanceTo(double x, double y) {
 
 		return Math.hypot(Math.abs(this.center.x - x), Math.abs(this.center.y - y));
@@ -218,7 +283,10 @@ public class BaseActor extends Group {
 		this.center.set(x, y);
 	
 	}
-	
+	/**
+	 * gets the texture of this BaseActor
+	 * @return Texture the texture of the BaseActor
+	 */
 	public Texture getTexture() {
 		return this.texture;
 	}
